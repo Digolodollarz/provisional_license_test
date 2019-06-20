@@ -43,64 +43,66 @@ class HomeWidget extends StatelessWidget {
               ),
             ],
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
+          SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
 //                constraints: BoxConstraints.expand(height: 128),
-                padding: EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  top: 64.0,
-                  bottom: 32.0,
-                ),
-                child: Text(
-                  "Learn to drive",
-                  style: Theme.of(context).textTheme.display1.copyWith(
-                        color: Colors.white,
-                      ),
-                ),
-              ),
-              Opacity(
-                opacity: 0.5,
-                child: Text(
-                  'Welcome to a drunkard\'s freaking application',
-                ),
-              ),
-              Expanded(
-                child: Stack(
-                  children: <Widget>[
-                    SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          DashboardItemWidget(),
-                          DashboardStatisticsCard(),
-                          DashboardItemWidget(),
-                          DashboardItemWidget(),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 8.0,
-                      decoration: BoxDecoration(
+                  padding: EdgeInsets.only(
+                    left: 16.0,
+                    right: 16.0,
+                    top: 32.0,
+                    bottom: 16.0,
+                  ),
+                  child: Text(
+                    "Learn to drive",
+                    style: Theme.of(context).textTheme.display1.copyWith(
                           color: Colors.white,
-                          gradient: LinearGradient(
-                              begin: FractionalOffset.bottomCenter,
-                              end: FractionalOffset.topCenter,
-                              colors: [
-                                Theme.of(context).primaryColor.withOpacity(0.0),
-                                Theme.of(context).primaryColor,
-                              ],
-                              stops: [
-                                0.0,
-                                1.0
-                              ])),
-                    ),
-                  ],
+                        ),
+                  ),
                 ),
-              )
-            ],
+                Opacity(
+                  opacity: 0.5,
+                  child: Text(
+                    'Welcome to a drunkard\'s freaking application',
+                  ),
+                ),
+                Expanded(
+                  child: Stack(
+                    children: <Widget>[
+                      SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            DashboardItemWidget(),
+                            DashboardStatisticsCard(),
+                            DashboardItemWidget(),
+                            DashboardItemWidget(),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 8.0,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            gradient: LinearGradient(
+                                begin: FractionalOffset.bottomCenter,
+                                end: FractionalOffset.topCenter,
+                                colors: [
+                                  Theme.of(context).primaryColor.withOpacity(0.0),
+                                  Theme.of(context).primaryColor,
+                                ],
+                                stops: [
+                                  0.0,
+                                  1.0
+                                ])),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ],
       ),
