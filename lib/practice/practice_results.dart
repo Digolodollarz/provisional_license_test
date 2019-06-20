@@ -11,6 +11,25 @@ class PracticeResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Material(
+      child: SafeArea(
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Text("Your Results"),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class QuestionResultWidget extends StatelessWidget {
+  final Question question;
+  @override
+  Widget build(BuildContext context) {
     return Container();
   }
 }
+

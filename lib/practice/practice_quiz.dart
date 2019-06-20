@@ -1,4 +1,14 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flip_panel/flip_panel.dart';
+
+
+const _margin = 16.0;
+const _marginVertical = 16.0;
+const _marginHorizontal = 16.0;
+const _cornerRadius = 8.0;
 
 class PracticeQuizPage extends StatelessWidget {
   @override
@@ -7,66 +17,127 @@ class PracticeQuizPage extends StatelessWidget {
       child: Container(
         color: Theme.of(context).backgroundColor,
         child: SafeArea(
-          minimum: EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              TimerWidget(),
-              FractionallySizedBox(
-                child: AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Image.asset(
-                    'assets/img/questions/road-rules.jpg',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-                child: Text(
-                  'Which car goes first in the diagram above?',
-                  style: Theme.of(context).textTheme.display1.copyWith(),
-                ),
-              ),
-              AnswerWidget(
-                option: 'A',
-                text: 'Car Red',
-              ),
-              AnswerWidget(
-                option: 'B',
-                text: 'Car Blue',
-                selected: true,
-              ),
-              AnswerWidget(
-                option: 'C',
-                text: 'Car Green',
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          minimum: EdgeInsets.only(),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+              child: Column(
                 children: <Widget>[
-                  FlatButton(
-                    child: Text("previous"),
-                    onPressed: () {},
-                  ),
-                  RaisedButton(
-                    child: Text("next"),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    '13',
-                    style: Theme.of(context).textTheme.display1.copyWith(
-                          color: Theme.of(context).primaryColor,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Visibility(
+                          visible: false,
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          maintainInteractivity: true,
+                          child: Icon(Platform.isIOS? CupertinoIcons.pause: Icons.pause),
                         ),
+                        FlipClock.countdown(
+                          duration: Duration(minutes: 8, seconds: 0),
+                          digitColor: Colors.white,
+                          backgroundColor: Theme.of(context).accentColor,
+                          digitSize: 28.0,
+                          width: 24.0,
+                          height: 32.0,
+                          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+                          onDone: () => print('ih'),
+                        ),
+                        Icon(Platform.isIOS? CupertinoIcons.clear: Icons.clear)
+                      ],
+                    ),
                   ),
-                  Text('/25'),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: _marginHorizontal),
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(_cornerRadius),
+                        child: Image.asset(
+                          'assets/img/questions/road-rules.jpg',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: _marginHorizontal,
+                      vertical: _marginVertical / 2,
+                    ),
+                    child: Text(
+                      'Which car goes first in the diagram above?',
+                      style: Theme.of(context).textTheme.display1.copyWith(
+                            height: 0.8,
+                          ),
+                    ),
+                  ),
+                  AnswerWidget(
+                    option: 'A',
+                    text: 'Car Red',
+                  ),
+                  AnswerWidget(
+                    option: 'B',
+                    text: 'Car Blue',
+                    selected: true,
+                  ),
+                  AnswerWidget(
+                    option: 'C',
+                    text: 'Car Green',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: _marginHorizontal,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        FlatButton(
+                          child: Text("previous"),
+                          onPressed: () {},
+                          textColor: Theme.of(context).accentColor,
+                        ),
+                        RaisedButton(
+                          child: Text("next"),
+                          onPressed: () {},
+                          color: Theme.of(context).primaryColor,
+                          textColor: Theme.of(context).primaryTextTheme.body1.color,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(_cornerRadius * 2),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              '13',
+                              style: Theme.of(context).textTheme.display1.copyWith(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            Text('/25'),
+                          ],
+                        ),
+                        LinearProgressIndicator(value: 13 / 25),
+                      ],
+                    ),
+                  )
                 ],
               ),
-              LinearProgressIndicator(value: 13 / 25),
-            ],
+            ),
           ),
         ),
       ),
@@ -105,7 +176,10 @@ class AnswerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: selected ? 8.0 : 2.0,
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      margin: EdgeInsets.symmetric(
+        vertical: _marginVertical / 4,
+        horizontal: _marginHorizontal,
+      ),
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Row(
