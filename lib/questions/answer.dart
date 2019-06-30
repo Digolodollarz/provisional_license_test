@@ -1,17 +1,19 @@
-class Answer {
+class Option {
   double id;
   String image;
   double questionId;
   String title;
+  String option;
 
-  Answer({
+  Option({
     this.id,
     this.image,
     this.questionId,
     this.title,
+    this.option,
   });
 
-  factory Answer.fromJson(Map<String, dynamic> json) => new Answer(
+  factory Option.fromJson(Map<String, dynamic> json) => new Option(
     id: json["id"].toDouble(),
     image: json["image"] == null ? null : json["image"],
     questionId: json["question_id"].toDouble(),

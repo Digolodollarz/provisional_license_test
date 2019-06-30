@@ -3,8 +3,8 @@ import 'package:provisional_license_test/questions/answer.dart';
 
 class QuestionWidget extends StatelessWidget {
   final String question;
-  final Answer correctAnswer;
-  final List<Answer> answers;
+  final Option correctAnswer;
+  final List<Option> answers;
 
   const QuestionWidget(
       {Key key, this.question, this.correctAnswer, this.answers})

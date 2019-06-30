@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
+import '../settings.dart';
 import 'dashboard_item_widget.dart';
+import 'dashboard_previous_results_card.dart';
 import 'dashboard_statistics_card.dart';
 
 class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Container(
       color: Theme.of(context).primaryColorDark,
       child: Stack(
@@ -44,6 +50,7 @@ class HomeWidget extends StatelessWidget {
             ],
           ),
           SafeArea(
+            bottom: false,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,20 +60,23 @@ class HomeWidget extends StatelessWidget {
                   padding: EdgeInsets.only(
                     left: 16.0,
                     right: 16.0,
-                    top: 32.0,
+                    top: 16.0,
                     bottom: 16.0,
                   ),
-                  child: Text(
-                    "Learn to drive",
-                    style: Theme.of(context).textTheme.display1.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
-                ),
-                Opacity(
-                  opacity: 0.5,
-                  child: Text(
-                    'Welcome to a drunkard\'s freaking application',
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Learn to drive",
+                        style: Theme.of(context).textTheme.display3.copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
+                      IconButton(
+                        icon: Icon(Platform.isIOS? Icons.more_horiz: Icons.more_vert),
+                        onPressed: () => openSettings(context),
+                      )
+                    ],
                   ),
                 ),
                 Expanded(
@@ -78,6 +88,7 @@ class HomeWidget extends StatelessWidget {
                             DashboardItemWidget(),
                             DashboardStatisticsCard(),
                             DashboardItemWidget(),
+                            DashboardPreviousResultsCard(),
                             DashboardItemWidget(),
                           ],
                         ),

@@ -11,7 +11,7 @@ Question questionFromJson(String str) => Question.fromJson(json.decode(str));
 String questionToJson(Question data) => json.encode(data.toJson());
 
 class Question {
-  List<Answer> answers;
+  List<Option> answers;
   double correctAnswer;
   double id;
   String image;
@@ -26,7 +26,7 @@ class Question {
   });
 
   factory Question.fromJson(Map<String, dynamic> json) => new Question(
-    answers: new List<Answer>.from(json["answers"].map((x) => Answer.fromJson(x))),
+    answers: new List<Option>.from(json["answers"].map((x) => Option.fromJson(x))),
     correctAnswer: json["correctAnswer"].toDouble(),
     id: json["id"].toDouble(),
     image: json["image"] == null ? null : json["image"],
