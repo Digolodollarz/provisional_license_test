@@ -4,15 +4,28 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:provisional_license_test/auth/authentication.dart';
+import 'package:provisional_license_test/auth/authentication_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../settings.dart';
 import 'dashboard_item_widget.dart';
 import 'dashboard_previous_results_card.dart';
 import 'dashboard_statistics_card.dart';
 
-class HomeWidget extends StatelessWidget {
+class HomeWidget extends StatefulWidget {
+
+  @override
+  _HomeWidgetState createState() => _HomeWidgetState();
+}
+
+class _HomeWidgetState extends State<HomeWidget> {
+  AuthenticationBloc authenticationBloc;
+
   @override
   Widget build(BuildContext context) {
+    authenticationBloc =
+        BlocProvider.of<AuthenticationBloc>(context);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Container(
       color: Theme.of(context).primaryColorDark,
@@ -118,5 +131,9 @@ class HomeWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _logout(){
+    authenticationBloc.dispatch(LoggedOut());
   }
 }
