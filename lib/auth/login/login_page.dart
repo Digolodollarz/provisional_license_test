@@ -15,6 +15,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:provisional_license_test/auth/authentication.dart';
 import 'package:provisional_license_test/auth/authentication_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provisional_license_test/widgets/home_widget.dart';
 
 class LoginPage extends StatelessWidget {
   final UserRepository userRepository;
@@ -102,7 +103,10 @@ class LoginPage extends StatelessWidget {
                                   : Colors.white,
                             )),
                         color: Theme.of(context).backgroundColor,
-                        onPressed: () {},
+                        onPressed: () {
+                          final _loginBloc = BlocProvider.of<LoginBloc>(context);
+                          _loginBloc.dispatch(SkipLogin());
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Text(

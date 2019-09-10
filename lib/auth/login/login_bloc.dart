@@ -36,5 +36,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         yield LoginFailure(error: error.toString());
       }
     }
+
+    if(event is SkipLogin){
+      yield LoginLoading();
+
+      final token = "Anonymous";
+      authenticationBloc.dispatch(LoggedIn(token: token));
+      yield LoginInitial();
+    }
   }
 }

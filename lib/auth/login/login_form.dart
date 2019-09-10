@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
                                   fontFamily: "RobotoMedium",
                                   fontSize: 16,
                                   color: Colors.white)),
-                          onPressed: () {}),
+                          onPressed: _onLoginButtonPressed),
                     )
                   ],
                 )),
