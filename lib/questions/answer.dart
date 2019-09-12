@@ -16,14 +16,14 @@ class Option {
   factory Option.fromJson(Map<String, dynamic> json) => new Option(
     id: json["id"].toDouble(),
     image: json["image"] == null ? null : json["image"],
-    questionId: json["question_id"].toDouble(),
+    questionId: json["questionId"].toDouble(),
     title: json["title"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "image": image == null ? null : image,
-    "question_id": questionId,
+    "questionId": questionId,
     "title": title,
   };
 }

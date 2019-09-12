@@ -53,6 +53,7 @@ flutter:
   assets:
    - assets/img/home_icons/
    - assets/img/questions/
+   - assets/questions.db
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
