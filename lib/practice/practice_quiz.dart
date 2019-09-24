@@ -36,151 +36,161 @@ class _PracticeQuizPageState extends State<PracticeQuizPage> {
                 } else if (snapshot.hasError) {
                   return Text("Error ${snapshot.error}");
                 }
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                        minHeight: MediaQuery.of(context).size.height),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Visibility(
-                                visible: false,
-                                maintainSize: true,
-                                maintainAnimation: true,
-                                maintainState: true,
-                                maintainInteractivity: true,
-                                child: Icon(Platform.isIOS
-                                    ? CupertinoIcons.pause
-                                    : Icons.pause),
-                              ),
-                              ConstrainedBox(
-                                constraints: BoxConstraints.tight(Size.zero),
-                                child: FlipClock.countdown(
-                                  duration: Duration(minutes: 8, seconds: 0),
-                                  digitColor: Colors.white,
-                                  backgroundColor: Theme.of(context).accentColor,
-                                  digitSize: 28.0,
-                                  width: 24.0,
-                                  height: 32.0,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(4.0)),
-                                  onDone: () => print('ih'),
-                                ),
-                              ),
-                              Icon(Platform.isIOS
-                                  ? CupertinoIcons.clear
-                                  : Icons.clear)
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: _marginHorizontal),
-                          child: AspectRatio(
-                            aspectRatio: 16 / 9,
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(_cornerRadius),
-                              child: snapshot.data[position].image != null
-                                  ? Image.network(
+                return QuizWidget(questions: snapshot.data);
+              }),
+        ),
+      ),
+    );
+  }
+}
+
+class QuizWidget extends StatefulWidget {
+  final List<Question> questions;
+
+  const QuizWidget({Key key, this.questions}) : super(key: key);
+
+  @override
+  _QuizWidgetState createState() => _QuizWidgetState();
+}
+
+class _QuizWidgetState extends State<QuizWidget> {
+  int _position = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints:
+            BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Visibility(
+                    visible: false,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    maintainInteractivity: true,
+                    child: Icon(
+                        Platform.isIOS ? CupertinoIcons.pause : Icons.pause),
+                  ),
+                  FlipClock.countdown(
+                    duration: Duration(minutes: 8, seconds: 0),
+                    digitColor: Colors.white,
+                    backgroundColor: Theme.of(context).accentColor,
+                    digitSize: 28.0,
+                    width: 24.0,
+                    height: 32.0,
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(4.0)),
+                    onDone: () => print('ih'),
+                  ),
+                  Icon(Platform.isIOS ? CupertinoIcons.clear : Icons.clear)
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: _marginHorizontal),
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(_cornerRadius),
+                  child: widget.questions[_position].image != null
+                      ? Image.network(
 //                            'assets/img/questions/road-rules.jpg',
-                                      snapshot.data[position].image,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Text("No Image"),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: _marginHorizontal,
-                            vertical: _marginVertical / 2,
-                          ),
-                          child: Text(
-                            'Which car goes first in the diagram above?',
-                            style:
-                                Theme.of(context).textTheme.display1.copyWith(
-                                      height: 0.8,
-                                    ),
-                          ),
-                        ),
-                        AnswerWidget(
-                          option: 'A',
-                          text: 'Car Red',
-                        ),
-                        AnswerWidget(
-                          option: 'B',
-                          text: 'Car Blue',
-                          selected: true,
-                        ),
-                        AnswerWidget(
-                          option: 'C',
-                          text: 'Car Green',
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: _marginHorizontal,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              FlatButton(
-                                child: Text("previous"),
-                                onPressed: () {},
-                                textColor: Theme.of(context).accentColor,
-                              ),
-                              RaisedButton(
-                                child: Text("next"),
-                                onPressed: () {
-                                  setState(() {
-                                    position++;
-                                  });
-                                },
-                                color: Theme.of(context).primaryColor,
-                                textColor: Theme.of(context)
-                                    .primaryTextTheme
-                                    .body1
-                                    .color,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(_cornerRadius * 2),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    '$position',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .display1
-                                        .copyWith(
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                  ),
-                                  Text('/25'),
-                                ],
-                              ),
-                              LinearProgressIndicator(value: position / 25),
-                            ],
-                          ),
+                          widget.questions[_position].image,
+                          fit: BoxFit.cover,
                         )
-                      ],
+                      : Text("No Image"),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: _marginHorizontal,
+                vertical: _marginVertical / 2,
+              ),
+              child: Text(
+                widget.questions[_position].title,
+                style: Theme.of(context).textTheme.display1.copyWith(
+                      height: 0.8,
+                    ),
+              ),
+            ),
+            ListView.builder(
+              itemBuilder: (BuildContext context, int pos) {
+                final option = widget.questions[_position].answers[pos];
+                return AnswerWidget(
+                  option: option.option,
+                  text: option.title,
+                );
+              },
+              itemCount: widget.questions[_position].answers.length,
+              shrinkWrap: true,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: _marginHorizontal,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  FlatButton(
+                    child: Text("previous"),
+                    onPressed: () {
+                      setState(() {
+                        _position =
+                            _position - 1 >= 0 ? _position - 1 : _position;
+                      });
+                    },
+                    textColor: Theme.of(context).accentColor,
+                  ),
+                  RaisedButton(
+                    child: Text("next"),
+                    onPressed: () {
+                      setState(() {
+                        _position = _position + 1 < widget.questions.length
+                            ? _position + 1
+                            : _position;
+                        print(_position);
+                      });
+                    },
+                    color: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).primaryTextTheme.body1.color,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(_cornerRadius * 2),
                     ),
                   ),
-                );
-              }),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '${_position + 1}',
+                        style: Theme.of(context).textTheme.display1.copyWith(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                      ),
+                      Text('/${widget.questions.length}'),
+                    ],
+                  ),
+                  LinearProgressIndicator(
+                      value: (_position + 1 )/ widget.questions.length),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

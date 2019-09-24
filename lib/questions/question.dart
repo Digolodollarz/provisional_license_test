@@ -15,7 +15,7 @@ String questionToJson(Question data) => json.encode(data.toJson());
 class Question {
   List<Option> answers;
   double correctAnswer;
-  double id;
+  int id;
   String image;
   String title;
   Category category;

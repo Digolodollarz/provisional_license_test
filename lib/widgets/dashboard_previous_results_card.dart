@@ -93,7 +93,7 @@ _openRandomTest(BuildContext context) {
     for (int i = 1; i <= 25; i++) {
       _mockQuestions.add(
         Question(
-          id: i.toDouble(),
+          id: i,
           image:
               _random.nextBool() ? 'assets/img/questions/road-rules.jpg' : null,
           title: 'Which car goes first in the diagram?',

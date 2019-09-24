@@ -23,13 +23,11 @@ String columnQuestionId = "questionId";
 
 String categoriesTable = "category";
 
-class DBHelper{
-
+class DBHelper {
   static Database _db;
 
-  Future<Database> get db async{
-    if(_db != null)
-      return _db;
+  Future<Database> get db async {
+    if (_db != null) return _db;
     _db = await initDb();
     return _db;
   }
@@ -39,6 +37,7 @@ class DBHelper{
     String path = join(documentsDirectory.path, "questions.db");
 
     var exists = await databaseExists(path);
+    exists = false;
     if (!exists) {
       print("Creating new copy from asset");
 
@@ -50,11 +49,10 @@ class DBHelper{
       // Copy from asset
       ByteData data = await rootBundle.load(join("assets", "questions.db"));
       List<int> bytes =
-      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
       // Write and flush the bytes written
       await File(path).writeAsBytes(bytes, flush: true);
-
     } else {
       print("Opening existing database");
     }
@@ -63,37 +61,51 @@ class DBHelper{
     return theDb;
   }
 
-  void _onCreate(Database db, int version) async {
+  void _onCreate(Database db, int version) async {}
 
-  }
-
-  Future<List<Question>> _getRandomQuestions() async{
-      final client = http.Client();
-      final response = await client.get('https://api.mockaroo.com/api/b2ed6a80?count=25&key=b2a53bb0');
-      final questionsJson = json.decode(response.body);
-      print(questionsJson);
+  Future<List<Question>> _getRandomQuestions() async {
+    final client = http.Client();
+    final response = await client
+        .get('https://api.mockaroo.com/api/b2ed6a80?count=25&key=b2a53bb0');
+    final questionsJson = json.decode(response.body);
+    print(questionsJson);
 //      questionsJson.map((q) => q.cast<Map<String, dynamic>>);
-      final questionsJsonMap = questionsJson.map<Question>((json) => Question.fromJson(json)).toList();
-      return questionsJsonMap;
+    final questionsJsonMap =
+        questionsJson.map<Question>((json) => Question.fromJson(json)).toList();
+    return questionsJsonMap;
   }
 
-  Future<List<Question>> getRandomQuestions() async{
+  Future<List<Question>> getRandomQuestions() async {
     final _questionIds = [1, 2, 3];
-    List<Map> _questions = await _db.rawQuery(""
-        "SELECT * "
-        "FROM '$questionsTable"
-        "WHERE '$columnQuestionId' IN ($_questionIds)");
-    var _questionsList = _questions.map((_q) => Question.fromMap(_q));
+    print(""
+        "SELECT *"
+        "FROM '$answersTable'"
+        " WHERE $columnQuestionId IN (${_questionIds.join(' , ')})");
     final List<Map> _options = await _db.rawQuery(""
         "SELECT *"
         "FROM '$answersTable'"
-        "WHERE '$columnQuestionId' IN ($_questionIds)");
-    final _optionsList = _options.map((_a)=> Option.fromMap(_a));
+        " WHERE $columnQuestionId IN (${_questionIds.join(' , ')})");
+    print(""
+        "SELECT *"
+        "FROM '$answersTable'"
+        " WHERE '$columnQuestionId' IN (${_questionIds.join(' , ')})");
+    final _optionsList = _options.map((_a) => Option.fromMap(_a));
+    List<Map> _allQuestions = await _db.rawQuery(""
+        "SELECT * "
+        " FROM '$questionsTable'");
+    List<Map> _questions = await _db.rawQuery(""
+        "SELECT * "
+        " FROM '$questionsTable'"
+        " WHERE $columnId IN (${_questionIds.join(' , ')})");
+    var _questionsMap = _questions.map((_q) => Question.fromMap(_q)).map((__q) {
+      __q.answers =
+          _optionsList.where((_option) => _option.questionId == __q.id).toList();
+      return __q;
+    });
+    return _questionsMap.toList();
   }
 
-  updateData() async{
+  updateData() async {}
 
-  }
-
-  Future saveTest() async{}
+  Future saveTest() async {}
 }

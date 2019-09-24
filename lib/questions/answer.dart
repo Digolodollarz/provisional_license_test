@@ -1,7 +1,9 @@
+import 'package:provisional_license_test/db/db_helper.dart';
+
 class Option {
-  double id;
+  int id;
   String image;
-  double questionId;
+  int questionId;
   String title;
   String option;
 
@@ -19,6 +21,14 @@ class Option {
     questionId: json["questionId"].toDouble(),
     title: json["title"],
   );
+
+  Option.fromMap(Map<String, dynamic> map) {
+  this.id = map[columnId];
+  this.image = map[columnImage];
+  this.title = map[columnTitle];
+  this.option = map[columnOption];
+  this.questionId = map[columnQuestionId];
+  }
 
   Map<String, dynamic> toJson() => {
     "id": id,
