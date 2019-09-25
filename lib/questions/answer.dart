@@ -2,38 +2,41 @@ import 'package:provisional_license_test/db/db_helper.dart';
 
 class Option {
   int id;
-  String image;
-  int questionId;
+  String created;
+  bool correct;
   String title;
   String option;
+  Null image;
+  int question;
 
-  Option({
-    this.id,
-    this.image,
-    this.questionId,
-    this.title,
-    this.option,
-  });
+  Option(
+      {this.id,
+        this.created,
+        this.correct,
+        this.title,
+        this.option,
+        this.image,
+        this.question});
 
-  factory Option.fromJson(Map<String, dynamic> json) => new Option(
-    id: json["id"].toDouble(),
-    image: json["image"] == null ? null : json["image"],
-    questionId: json["questionId"].toDouble(),
-    title: json["title"],
-  );
-
-  Option.fromMap(Map<String, dynamic> map) {
-  this.id = map[columnId];
-  this.image = map[columnImage];
-  this.title = map[columnTitle];
-  this.option = map[columnOption];
-  this.questionId = map[columnQuestionId];
+  Option.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    created = json['created'];
+    correct = json['correct'];
+    title = json['title'];
+    option = json['option'];
+    image = json['image'];
+    question = json['question'];
   }
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "image": image == null ? null : image,
-    "questionId": questionId,
-    "title": title,
-  };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['created'] = this.created;
+    data['correct'] = this.correct;
+    data['title'] = this.title;
+    data['option'] = this.option;
+    data['image'] = this.image;
+    data['question'] = this.question;
+    return data;
+  }
 }

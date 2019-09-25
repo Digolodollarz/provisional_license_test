@@ -88,26 +88,8 @@ class DashboardPreviousResultsCard extends StatelessWidget {
 _openRandomTest(BuildContext context) {
   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
     final _mockQuestions = <Question>[];
-    final _mockResults = Map<double, double>();
+    final _mockResults = Map<double, Option>();
     final _random = Random();
-    for (int i = 1; i <= 25; i++) {
-      _mockQuestions.add(
-        Question(
-          id: i,
-          image:
-              _random.nextBool() ? 'assets/img/questions/road-rules.jpg' : null,
-          title: 'Which car goes first in the diagram?',
-          answers: <Option>[
-            Option(id: 1, title: 'Car A', option: 'A'),
-            Option(id: 2, title: 'Car C', option: 'B'),
-            Option(id: 3, title: 'Car B', option: 'C'),
-          ],
-          correctAnswer: (1 + _random.nextInt(3)).toDouble(),
-        ),
-      );
-      _mockResults.addAll(
-          Map.from({i.toDouble(): (1 + _random.nextInt(3)).toDouble()}));
-    }
     print("Ndasheedzwa");
     return PracticeResultsPage(
       questions: _mockQuestions,

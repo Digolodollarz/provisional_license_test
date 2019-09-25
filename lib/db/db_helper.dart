@@ -63,46 +63,19 @@ class DBHelper {
 
   void _onCreate(Database db, int version) async {}
 
-  Future<List<Question>> _getRandomQuestions() async {
-    final client = http.Client();
-    final response = await client
-        .get('https://api.mockaroo.com/api/b2ed6a80?count=25&key=b2a53bb0');
-    final questionsJson = json.decode(response.body);
-    print(questionsJson);
-//      questionsJson.map((q) => q.cast<Map<String, dynamic>>);
-    final questionsJsonMap =
-        questionsJson.map<Question>((json) => Question.fromJson(json)).toList();
-    return questionsJsonMap;
-  }
-
   Future<List<Question>> getRandomQuestions() async {
     final _questionIds = [1, 2, 3];
-    print(""
-        "SELECT *"
-        "FROM '$answersTable'"
-        " WHERE $columnQuestionId IN (${_questionIds.join(' , ')})");
-    final List<Map> _options = await _db.rawQuery(""
-        "SELECT *"
-        "FROM '$answersTable'"
-        " WHERE $columnQuestionId IN (${_questionIds.join(' , ')})");
-    print(""
-        "SELECT *"
-        "FROM '$answersTable'"
-        " WHERE '$columnQuestionId' IN (${_questionIds.join(' , ')})");
-    final _optionsList = _options.map((_a) => Option.fromMap(_a));
-    List<Map> _allQuestions = await _db.rawQuery(""
-        "SELECT * "
-        " FROM '$questionsTable'");
     List<Map> _questions = await _db.rawQuery(""
         "SELECT * "
         " FROM '$questionsTable'"
         " WHERE $columnId IN (${_questionIds.join(' , ')})");
-    var _questionsMap = _questions.map((_q) => Question.fromMap(_q)).map((__q) {
-      __q.answers =
-          _optionsList.where((_option) => _option.questionId == __q.id).toList();
-      return __q;
-    });
-    return _questionsMap.toList();
+    _questions = _questions.map<Map>((_q) {
+      var q = Map<String, dynamic>();
+      q.addAll(_q);
+      q['answers'] = json.decode(_q['answers']);
+      return q;
+    }).toList();
+    return _questions.map((q) => Question.fromJson(q)).toList();
   }
 
   updateData() async {}

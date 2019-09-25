@@ -13,47 +13,49 @@ Question questionFromJson(String str) => Question.fromJson(json.decode(str));
 String questionToJson(Question data) => json.encode(data.toJson());
 
 class Question {
-  List<Option> answers;
-  double correctAnswer;
   int id;
-  String image;
-  String title;
+  List<Option> answers;
   Category category;
+  String created;
+  String title;
+  Null image;
 
-  Question({
-    this.answers,
-    this.correctAnswer,
-    this.id,
-    this.image,
-    this.title,
-    this.category,
-  });
+  Question(
+      {this.id,
+        this.answers,
+        this.category,
+        this.created,
+        this.title,
+        this.image});
 
-  factory Question.fromJson(Map<String, dynamic> json) => new Question(
-        answers: new List<Option>.from(
-            json["answers"].map((x) => Option.fromJson(x))),
-        correctAnswer: json["correctAnswer"].toDouble(),
-        id: json["id"].toDouble(),
-        image: json["image"] == null ? null : json["image"],
-        title: json["title"],
-        category: Category.fromJson(json["category"]),
-      );
-
-  Question.fromMap(Map<String, dynamic> map) {
-    this.answers = map[answers];
-    this.correctAnswer = map[correctAnswer];
-    this.id = map[columnId];
-    this.image = map[columnImage];
-    this.title = map[columnTitle];
-    this.category = map[category];
+  Question.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    if (json['answers'] != null) {
+      answers = new List<Option>();
+      json['answers'].forEach((v) {
+        answers.add(new Option.fromJson(v));
+      });
+    }
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
+    created = json['created'];
+    title = json['title'];
+    image = json['image'];
   }
 
-  Map<String, dynamic> toJson() => {
-        "answers": new List<dynamic>.from(answers.map((x) => x.toJson())),
-        "correctAnswer": correctAnswer,
-        "id": id,
-        "image": image == null ? null : image,
-        "title": title,
-        "category": category.toJson(),
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    if (this.answers != null) {
+      data['answers'] = this.answers.map((v) => v.toJson()).toList();
+    }
+    if (this.category != null) {
+      data['category'] = this.category.toJson();
+    }
+    data['created'] = this.created;
+    data['title'] = this.title;
+    data['image'] = this.image;
+    return data;
+  }
 }

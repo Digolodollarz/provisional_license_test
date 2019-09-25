@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_panel/flip_panel.dart';
 import 'package:provisional_license_test/db/db_helper.dart';
+import 'package:provisional_license_test/questions/answer.dart';
 import 'package:provisional_license_test/questions/question.dart';
 
 const _margin = 16.0;
@@ -55,6 +56,8 @@ class QuizWidget extends StatefulWidget {
 
 class _QuizWidgetState extends State<QuizWidget> {
   int _position = 0;
+  Map<int, Option> answers = Map();
+  Map<int, Option> cancelledOptions = Map();
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +88,7 @@ class _QuizWidgetState extends State<QuizWidget> {
                     digitSize: 28.0,
                     width: 24.0,
                     height: 32.0,
-                    borderRadius:
-                        const BorderRadius.all(Radius.circular(4.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
                     onDone: () => print('ih'),
                   ),
                   Icon(Platform.isIOS ? CupertinoIcons.clear : Icons.clear)
@@ -125,10 +127,25 @@ class _QuizWidgetState extends State<QuizWidget> {
             ListView.builder(
               itemBuilder: (BuildContext context, int pos) {
                 final option = widget.questions[_position].answers[pos];
+                final questionId = widget.questions[_position].id;
                 return AnswerWidget(
-                  option: option.option,
-                  text: option.title,
-                );
+                    option: option.option,
+                    text: option.title,
+                    selected: answers[questionId] != null &&
+                        answers[questionId].id == option.id,
+                    cancelled: cancelledOptions[questionId] != null &&
+                        cancelledOptions[questionId].id == option.id,
+                    select: () {
+                      print('Le Select');
+                      if (answers[questionId] != null) {
+                        if (answers[questionId].id == option.id) return;
+                        if (cancelledOptions[questionId] != null) return;
+                      }
+                      setState(() {
+                        cancelledOptions[questionId] = answers[questionId];
+                        answers[questionId] = option;
+                      });
+                    });
               },
               itemCount: widget.questions[_position].answers.length,
               shrinkWrap: true,
@@ -186,7 +203,7 @@ class _QuizWidgetState extends State<QuizWidget> {
                     ],
                   ),
                   LinearProgressIndicator(
-                      value: (_position + 1 )/ widget.questions.length),
+                      value: (_position + 1) / widget.questions.length),
                 ],
               ),
             )
@@ -215,51 +232,56 @@ class AnswerWidget extends StatelessWidget {
   final String text;
   final bool selected;
   final bool cancelled;
+  final VoidCallback select;
 
   const AnswerWidget({
     Key key,
     @required this.option,
     @required this.text,
-    this.selected = false,
-    this.cancelled = false,
+    @required this.selected,
+    @required this.cancelled,
+    @required this.select,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: selected ? 8.0 : 2.0,
-      margin: EdgeInsets.symmetric(
-        vertical: _marginVertical / 4,
-        horizontal: _marginHorizontal,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              decoration: BoxDecoration(
-                  color: selected
-                      ? Theme.of(context).primaryColor
-                      : cancelled
-                          ? Theme.of(context).accentColor
-                          : Colors.black12,
-                  borderRadius: BorderRadius.all(Radius.circular(4))),
-              child: Text(
-                '$option',
-                style: Theme.of(context).textTheme.body2.copyWith(
-                      color: selected ? Colors.white : Colors.black,
-                    ),
+    return InkWell(
+      onTap: select,
+      child: Card(
+        elevation: selected ? 8.0 : 2.0,
+        margin: EdgeInsets.symmetric(
+          vertical: _marginVertical / 4,
+          horizontal: _marginHorizontal,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                decoration: BoxDecoration(
+                    color: selected
+                        ? Theme.of(context).primaryColor
+                        : cancelled
+                            ? Theme.of(context).accentColor
+                            : Colors.black12,
+                    borderRadius: BorderRadius.all(Radius.circular(4))),
+                child: Text(
+                  '$option',
+                  style: Theme.of(context).textTheme.body2.copyWith(
+                        color: selected ? Colors.white : Colors.black,
+                      ),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '$text',
-                style: Theme.of(context).textTheme.body2,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '$text',
+                  style: Theme.of(context).textTheme.body2,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

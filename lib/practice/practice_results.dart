@@ -11,7 +11,7 @@ const _verticalMargin = 16.0;
 
 class PracticeResultsPage extends StatelessWidget {
   final List<Question> questions;
-  final Map<double, double> answers;
+  final Map<double, Option> answers;
 
   const PracticeResultsPage(
       {Key key, @required this.questions, @required this.answers})
@@ -102,7 +102,7 @@ class PracticeResultsPage extends StatelessWidget {
   _getIncorrect() {
     int incorrect = 0;
     for (var question in this.questions) {
-      if (question.correctAnswer != this.answers[question.id]) incorrect++;
+      if (!this.answers[question.id].correct) incorrect++;
     }
     return incorrect;
   }
@@ -110,7 +110,7 @@ class PracticeResultsPage extends StatelessWidget {
 
 class QuestionResultWidget extends StatelessWidget {
   final Question question;
-  final double answer;
+  final Option answer;
   final int number;
 
   const QuestionResultWidget({
@@ -167,8 +167,8 @@ class QuestionResultWidget extends StatelessWidget {
               (option) => AnswerWidgetResults(
                     option: option.option,
                     text: option.title,
-                    selected: this.answer == option.id,
-                    correct: option.id == this.question.correctAnswer,
+                    selected: this.answer.id == option.id,
+                    correct: option.correct,
                   ),
             ),
           )

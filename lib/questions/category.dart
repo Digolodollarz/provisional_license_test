@@ -2,18 +2,17 @@ class Category {
   int id;
   String title;
 
-  Category({
-    this.title,
-    this.id,
-  });
+  Category({this.id, this.title});
 
-  factory Category.fromJson(Map<String, dynamic> json) => new Category(
-        id: json["id"].toDouble(),
-        title: json["title"],
-      );
+  Category.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+  }
 
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['title'] = this.title;
+    return data;
+  }
 }
