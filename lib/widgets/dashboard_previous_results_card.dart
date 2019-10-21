@@ -88,7 +88,7 @@ class DashboardPreviousResultsCard extends StatelessWidget {
 _openRandomTest(BuildContext context) {
   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
     final _mockQuestions = <Question>[];
-    final _mockResults = Map<double, Option>();
+    final _mockResults = Map<int, Option>();
     final _random = Random();
     print("Ndasheedzwa");
     return PracticeResultsPage(

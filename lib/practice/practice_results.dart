@@ -11,11 +11,15 @@ const _verticalMargin = 16.0;
 
 class PracticeResultsPage extends StatelessWidget {
   final List<Question> questions;
-  final Map<double, Option> answers;
+  final Map<int, Option> answers;
+  final Map<int, Option> cancelledAnswers;
 
-  const PracticeResultsPage(
-      {Key key, @required this.questions, @required this.answers})
-      : super(key: key);
+  const PracticeResultsPage({
+    Key key,
+    @required this.questions,
+    @required this.answers,
+    @required this.cancelledAnswers,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -165,11 +169,11 @@ class QuestionResultWidget extends StatelessWidget {
           ..addAll(
             question.answers.map(
               (option) => AnswerWidgetResults(
-                    option: option.option,
-                    text: option.title,
-                    selected: this.answer.id == option.id,
-                    correct: option.correct,
-                  ),
+                option: option.option,
+                text: option.title,
+                selected: this.answer.id == option.id,
+                correct: option.correct,
+              ),
             ),
           )
           ..add(Padding(

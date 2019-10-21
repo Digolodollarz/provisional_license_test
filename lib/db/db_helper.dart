@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:provisional_license_test/questions/answer.dart';
 import 'package:provisional_license_test/questions/question.dart';
+import 'package:provisional_license_test/questions/quiz_result.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
@@ -80,5 +81,8 @@ class DBHelper {
 
   updateData() async {}
 
-  Future saveTest() async {}
+  Future saveTest(QuizResult result) async {
+    final resultJson = result.toJson();
+    return await _db.insert("results", resultJson);
+  }
 }

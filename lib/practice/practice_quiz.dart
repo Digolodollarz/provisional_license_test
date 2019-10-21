@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_panel/flip_panel.dart';
 import 'package:provisional_license_test/db/db_helper.dart';
+import 'package:provisional_license_test/practice/practice_results.dart';
 import 'package:provisional_license_test/questions/answer.dart';
 import 'package:provisional_license_test/questions/question.dart';
+import 'package:provisional_license_test/questions/quiz_result.dart';
 
 import 'answer_widget.dart';
 
@@ -83,16 +85,16 @@ class _QuizWidgetState extends State<QuizWidget> {
                     child: Icon(
                         Platform.isIOS ? CupertinoIcons.pause : Icons.pause),
                   ),
-                  FlipClock.countdown(
-                    duration: Duration(minutes: 8, seconds: 0),
-                    digitColor: Colors.white,
-                    backgroundColor: Theme.of(context).accentColor,
-                    digitSize: 28.0,
-                    width: 24.0,
-                    height: 32.0,
-                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                    onDone: () => print('ih'),
-                  ),
+//                  FlipClock.countdown(
+//                    duration: Duration(minutes: 8, seconds: 0),
+//                    digitColor: Colors.white,
+//                    backgroundColor: Theme.of(context).accentColor,
+//                    digitSize: 28.0,
+//                    width: 24.0,
+//                    height: 32.0,
+//                    borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+//                    onDone: () => print('ih'),
+//                  ),
                   Icon(Platform.isIOS ? CupertinoIcons.clear : Icons.clear)
                 ],
               ),
@@ -170,13 +172,17 @@ class _QuizWidgetState extends State<QuizWidget> {
                     textColor: Theme.of(context).accentColor,
                   ),
                   RaisedButton(
-                    child: Text("next"),
+                    child: Text(_position + 1 == widget.questions.length
+                        ? "Finish"
+                        : "next"),
                     onPressed: () {
                       setState(() {
+                        if (_position + 2 > widget.questions.length) {
+                          saveResult();
+                        }
                         _position = _position + 1 < widget.questions.length
                             ? _position + 1
                             : _position;
-                        print(_position);
                       });
                     },
                     color: Theme.of(context).primaryColor,
@@ -214,6 +220,29 @@ class _QuizWidgetState extends State<QuizWidget> {
       ),
     );
   }
+
+  saveResult() async {
+    final _db = DBHelper();
+    await _db.initDb();
+
+    int correct = 0;
+    answers.forEach((q, a) {
+      if (a.correct) correct++;
+    });
+
+    QuizResult result = QuizResult(
+        date: DateTime.now(), correct: correct, total: widget.questions.length);
+
+    await _db.saveTest(result);
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return PracticeResultsPage(
+        questions: widget.questions,
+        answers: answers,
+        cancelledAnswers: cancelledOptions,
+      );
+    }));
+  }
 }
 
 class TimerWidget extends StatelessWidget {
@@ -228,4 +257,3 @@ class TimerWidget extends StatelessWidget {
     );
   }
 }
-

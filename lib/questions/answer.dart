@@ -6,7 +6,7 @@ class Option {
   bool correct;
   String title;
   String option;
-  Null image;
+  String image;
   int question;
 
   Option(
